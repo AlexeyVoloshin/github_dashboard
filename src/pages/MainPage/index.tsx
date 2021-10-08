@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Input } from 'antd';
 import { useDebouncedCallback } from 'use-debounce';
+import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from './types';
 
 const { Search } = Input;
 
@@ -12,26 +13,37 @@ export const MainPage: React.FC = (): React.ReactElement => {
 
   const debounced = useDebouncedCallback((value) => {
     setValue(value);
-  }, 300);
+  }, 500);
 
-  const sendReques = () => {
+  const getPopularRepo = React.useCallback(() => {
+    try {
+      const result = dispatch({ type: GET_POPULAR_REPO });
+    } catch (e) {}
+  }, []);
+
+  const sendReques = React.useCallback(() => {
     try {
       setIsLoading(true);
-      const result = dispatch({ type: 'USER_FETCH_REQUESTED' });
+      const result = dispatch({ type: ADD_SEARCH_FILTER });
       // if (result.error) {
       //
       // }
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+      // setIsLoading(false);
     } catch (e) {
       console.error(e);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     if (value) {
       sendReques();
+    } else {
+      getPopularRepo();
     }
-  }, [sendReques, value]);
+  }, [getPopularRepo, sendReques, value]);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();

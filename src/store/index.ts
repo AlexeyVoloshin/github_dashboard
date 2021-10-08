@@ -1,14 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { search_filter } from '../pages/MainPage/slice';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './saga';
+import rootReducer from './reducer/rootReducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
-  reducer: {
-    search: search_filter
-  },
+  reducer: rootReducer,
   middleware: [sagaMiddleware]
 });
 
