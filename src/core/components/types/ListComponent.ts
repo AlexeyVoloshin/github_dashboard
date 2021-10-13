@@ -1,12 +1,12 @@
-export interface IDataList {
-  nameRepo: string;
-  countStars: number;
-  dateLastCommit: Date;
-  link: string;
-}
+// export interface IDataList {
+//   nameRepo: string;
+//   countStars: number;
+//   dateLastCommit: Date;
+//   link: string;
+// }
 
 export interface IPropsList {
-  dataRepo: IDataList[];
+  dataRepo: IItems[];
 }
 
 export interface IItems {
@@ -22,8 +22,8 @@ export interface IDataRepo {
   items: IItems[];
 }
 
-export interface IResponceData {
-  status: number;
-  message: string;
-  data: IDataRepo;
-}
+// export interface IResponceData {
+//   status: number;
+//   message: string;
+//   data: IDataRepo;
+// }

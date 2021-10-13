@@ -1,7 +1,7 @@
-import React from 'react';
-import { List, Space } from 'antd';
-import { IPropsList } from '../types/ListComponent';
-import { StarOutlined } from '@ant-design/icons';
+import React from "react";
+import { List, Space } from "antd";
+import { IPropsList } from "../types/ListComponent";
+import { StarOutlined } from "@ant-design/icons";
 
 interface IPropsIconText {
   icon: any;
@@ -20,13 +20,13 @@ export const ListComponent: React.FC<IPropsList> = (
 ): React.ReactElement => {
   return (
     <List
-      itemLayout={'vertical'}
-      size={'large'}
+      itemLayout={"vertical"}
+      size={"large"}
       pagination={{
         onChange: (page) => {
           console.log(page);
         },
-        pageSize: 10
+        pageSize: 10,
       }}
       dataSource={props.dataRepo}
       footer={
@@ -40,16 +40,16 @@ export const ListComponent: React.FC<IPropsList> = (
           actions={[
             <IconText
               icon={StarOutlined}
-              text={item.countStars}
+              text={item.stargazers_count}
               key="list-vertical-star-o"
-            />
+            />,
           ]}
         >
           <List.Item.Meta
-            title={<a href={item.link}>{item.link}</a>}
-            description={item.nameRepo}
+            title={<a href={item.git_url}>{item.git_url}</a>}
+            description={item.name}
           />
-          <p>Date last commit: {item.dateLastCommit}</p>
+          <p>Date last commit: {item.updated_at}</p>
         </List.Item>
       )}
     />

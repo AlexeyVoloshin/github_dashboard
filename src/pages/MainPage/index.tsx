@@ -1,49 +1,68 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { Input } from 'antd';
-import { useDebouncedCallback } from 'use-debounce';
-import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from './types';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Input } from "antd";
+import { useDebouncedCallback } from "use-debounce";
+import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from "./types";
+import { ListComponent } from "../../core/components/ListComponent";
+import { RootState } from "../../store";
+import { IItems } from "../../core/components/types/ListComponent";
+import { readFilterSearch, saveFilterSearch } from "../../utils/localStore";
 
 const { Search } = Input;
 
 export const MainPage: React.FC = (): React.ReactElement => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [value, setValue] = React.useState('');
+  const searchFilter = readFilterSearch();
+  const stateRepo = useSelector((state: RootState) => state.repositories);
+
+  const [isLoading, setIsLoading] = React.useState<boolean>(
+    stateRepo.isLoading
+  );
+  const [inputValue, setInputValue] = React.useState(searchFilter);
+  const [repo, setRepo] = React.useState<IItems[]>(stateRepo.repo);
 
   const debounced = useDebouncedCallback((value) => {
-    setValue(value);
+    setInputValue(value);
   }, 500);
 
   const getPopularRepo = React.useCallback(() => {
     try {
-      const result = dispatch({ type: GET_POPULAR_REPO });
-    } catch (e) {}
-  }, []);
-
-  const sendReques = React.useCallback(() => {
-    try {
-      setIsLoading(true);
-      const result = dispatch({ type: ADD_SEARCH_FILTER });
-      // if (result.error) {
-      //
-      // }
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-      // setIsLoading(false);
+      // setIsLoading(true);
+      dispatch({ type: GET_POPULAR_REPO });
+      if (repo.length > 0) {
+        //   setIsLoading(false);
+      }
     } catch (e) {
       console.error(e);
     }
-  }, [dispatch]);
+  }, [dispatch, repo]);
+
+  const searchRepo = React.useCallback(
+    (search: string) => {
+      try {
+        setIsLoading(true);
+        dispatch({ type: ADD_SEARCH_FILTER, search });
+
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+        // setIsLoading(false);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
-    if (value) {
-      sendReques();
+    if (inputValue) {
+      searchRepo(inputValue);
     } else {
       getPopularRepo();
     }
-  }, [getPopularRepo, sendReques, value]);
+
+    return saveFilterSearch(inputValue);
+  }, [getPopularRepo, searchRepo, inputValue, isLoading]);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
@@ -57,7 +76,7 @@ export const MainPage: React.FC = (): React.ReactElement => {
         enterButton
         onChange={handleInput}
       />
-      {value}
+      {!isLoading ? "Loading...." : <ListComponent dataRepo={repo} />}
     </>
   );
 };

@@ -1,8 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { ADD_SEARCH_FILTER, IInitialState } from './types';
+import { createSlice } from "@reduxjs/toolkit";
+import { readFilterSearch } from "../../utils/localStore";
+import { ADD_SEARCH_FILTER, IInitialState } from "./types";
 
 const initialState: IInitialState = {
-  search_filter: ''
+  search_filter: readFilterSearch(),
 };
 
 export const slice = createSlice({
@@ -11,8 +12,8 @@ export const slice = createSlice({
   reducers: {
     addSearchFilter: (state, action) => {
       state.search_filter = action.payload;
-    }
-  }
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function
