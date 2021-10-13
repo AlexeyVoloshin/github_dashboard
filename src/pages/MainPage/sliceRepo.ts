@@ -1,18 +1,10 @@
 import { IItems } from "../../core/components/types/ListComponent";
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GET_POPULAR_REPO } from "./types";
-export interface RepoState {
-  wait: boolean;
-  isLoading: boolean;
-  success: boolean;
-  error: string;
-  repo: IItems[];
-}
+import { GET_POPULAR_REPO, RepoState } from "./types";
+
 const initialState: RepoState = {
-  wait: true,
   isLoading: false,
-  success: false,
   error: "",
   repo: [],
 };
@@ -27,10 +19,13 @@ export const sliceRepo = createSlice({
     repoLoading: (state: RepoState, action) => {
       state.isLoading = action.payload;
     },
+    repoError: (state: RepoState, action) => {
+      state.error = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addPopularRepo, repoLoading } = sliceRepo.actions;
+export const { addPopularRepo, repoLoading, repoError } = sliceRepo.actions;
 
 export const repo = sliceRepo.reducer;

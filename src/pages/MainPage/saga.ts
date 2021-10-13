@@ -9,11 +9,11 @@ import { getRepositories } from "../../api";
 import { AxiosResponse } from "axios";
 import { IDataRepo, IItems } from "../../core/components/types/ListComponent";
 import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from "./types";
-import { addPopularRepo, repoLoading } from "./sliceRepo";
+import { addPopularRepo, repoError, repoLoading } from "./sliceRepo";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ApiGetResponse } from "../../api/types";
 import { filterDataResponse } from "../../utils/filterDataResponce";
-import { addSearchFilter } from "./slice";
+import { addSearchFilter, searchError, searchLoading } from "./sliceSearch";
 
 interface IPropsSaga {
   search: string;
@@ -28,19 +28,22 @@ export function* fetchSearch(
   | PutEffect<PayloadAction<IItems[]>>
 > {
   try {
+    yield put(searchLoading(true));
+
     const result = yield call(getRepositories, {
       q: params.search,
     });
-
-    yield put(addSearchFilter(params.search));
-
-    yield put(
-      addPopularRepo(
-        filterDataResponse((result as ApiGetResponse<IDataRepo>).data.items)
-      )
-    );
-  } catch (e) {
-    console.error("error: ", e);
+    if ((result as ApiGetResponse<IDataRepo>).data.items) {
+      yield put(addSearchFilter(params.search));
+      yield put(
+        addPopularRepo(
+          filterDataResponse((result as ApiGetResponse<IDataRepo>).data.items)
+        )
+      );
+      yield put(searchLoading(false));
+    }
+  } catch (error) {
+    yield put(searchError(error));
   }
 }
 
@@ -63,12 +66,12 @@ export function* fetchRepo(): Generator<
       );
       yield put(repoLoading(false));
     }
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    yield put(repoError(error));
   }
 }
 
-export function* helloSaga() {
+export function* MainPageSaga() {
   yield takeEvery(ADD_SEARCH_FILTER, fetchSearch);
   yield takeEvery(GET_POPULAR_REPO, fetchRepo);
 }

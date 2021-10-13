@@ -5,7 +5,6 @@ import { useDebouncedCallback } from "use-debounce";
 import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from "./types";
 import { ListComponent } from "../../core/components/ListComponent";
 import { RootState } from "../../store";
-import { IItems } from "../../core/components/types/ListComponent";
 import { readFilterSearch, saveFilterSearch } from "../../utils/localStore";
 
 const { Search } = Input;
@@ -13,13 +12,14 @@ const { Search } = Input;
 export const MainPage: React.FC = (): React.ReactElement => {
   const dispatch = useDispatch();
   const searchFilter = readFilterSearch();
-  const stateRepo = useSelector((state: RootState) => state.repositories);
-
-  const [isLoading, setIsLoading] = React.useState<boolean>(
-    stateRepo.isLoading
+  const { isLoading, repo } = useSelector(
+    (state: RootState) => state.repositories
   );
+  const { isLoading: searchIsLoading } = useSelector(
+    (state: RootState) => state.search
+  );
+
   const [inputValue, setInputValue] = React.useState(searchFilter);
-  const [repo, setRepo] = React.useState<IItems[]>(stateRepo.repo);
 
   const debounced = useDebouncedCallback((value) => {
     setInputValue(value);
@@ -27,26 +27,16 @@ export const MainPage: React.FC = (): React.ReactElement => {
 
   const getPopularRepo = React.useCallback(() => {
     try {
-      // setIsLoading(true);
       dispatch({ type: GET_POPULAR_REPO });
-      if (repo.length > 0) {
-        //   setIsLoading(false);
-      }
     } catch (e) {
       console.error(e);
     }
-  }, [dispatch, repo]);
+  }, [dispatch]);
 
   const searchRepo = React.useCallback(
     (search: string) => {
       try {
-        setIsLoading(true);
         dispatch({ type: ADD_SEARCH_FILTER, search });
-
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-        // setIsLoading(false);
       } catch (e) {
         console.error(e);
       }
@@ -62,7 +52,7 @@ export const MainPage: React.FC = (): React.ReactElement => {
     }
 
     return saveFilterSearch(inputValue);
-  }, [getPopularRepo, searchRepo, inputValue, isLoading]);
+  }, [getPopularRepo, searchRepo, inputValue]);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
@@ -72,11 +62,11 @@ export const MainPage: React.FC = (): React.ReactElement => {
     <>
       <Search
         placeholder="input search loading default"
-        loading={isLoading}
+        loading={searchIsLoading}
         enterButton
         onChange={handleInput}
       />
-      {!isLoading ? "Loading...." : <ListComponent dataRepo={repo} />}
+      {isLoading ? "Loading...." : <ListComponent dataRepo={repo} />}
     </>
   );
 };

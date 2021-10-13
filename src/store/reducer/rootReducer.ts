@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { search_filter } from "../../pages/MainPage/slice";
+import { search_filter } from "../../pages/MainPage/sliceSearch";
 import { repo } from "../../pages/MainPage/sliceRepo";
 
 const rootReducer = combineReducers({
