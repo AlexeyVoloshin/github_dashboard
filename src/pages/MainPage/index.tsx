@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Input } from "antd";
 import { useDebouncedCallback } from "use-debounce";
 import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from "./types";
-import { ListComponent } from "../../core/components/ListComponent";
+import { ListComponent } from "../components/ListComponent";
 import { RootState } from "../../store";
 import { readFilterSearch, saveFilterSearch } from "../../utils/localStore";
 
@@ -58,6 +58,7 @@ export const MainPage: React.FC = (): React.ReactElement => {
     e.preventDefault();
     debounced(e.target.value);
   };
+
   return (
     <>
       <Search
@@ -66,7 +67,11 @@ export const MainPage: React.FC = (): React.ReactElement => {
         enterButton
         onChange={handleInput}
       />
-      {isLoading ? "Loading...." : <ListComponent dataRepo={repo} />}
+      {repo.length > 0 && !isLoading ? (
+        <ListComponent dataRepo={repo} />
+      ) : (
+        "Loading...."
+      )}
     </>
   );
 };

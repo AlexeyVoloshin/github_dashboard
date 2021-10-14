@@ -12,7 +12,7 @@ import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from "./types";
 import { addPopularRepo, repoError, repoLoading } from "./sliceRepo";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ApiGetResponse } from "../../api/types";
-import { filterDataResponse } from "../../utils/filterDataResponce";
+import { filterDataResponse } from "../../utils/filterData";
 import { addSearchFilter, searchError, searchLoading } from "./sliceSearch";
 
 interface IPropsSaga {
@@ -32,6 +32,7 @@ export function* fetchSearch(
 
     const result = yield call(getRepositories, {
       q: params.search,
+      sort: "stars",
     });
     if ((result as ApiGetResponse<IDataRepo>).data.items) {
       yield put(addSearchFilter(params.search));

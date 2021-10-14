@@ -1,12 +1,19 @@
-// export interface IDataList {
-//   nameRepo: string;
-//   countStars: number;
-//   dateLastCommit: Date;
-//   link: string;
-// }
-
 export interface IPropsList {
   dataRepo: IItems[];
+}
+
+export interface ICardDetails {
+  details: IItems | undefined;
+}
+
+export interface IContributors {
+  contributors: IOwner[];
+}
+
+export interface IOwner {
+  avatar_url: string;
+  login: string;
+  html_url: string;
 }
 
 export interface IItems {
@@ -14,6 +21,10 @@ export interface IItems {
   stargazers_count: number;
   updated_at: Date;
   git_url: string;
+  contributors_url: string;
+  description: string;
+  languages_url: string;
+  owner: IOwner;
 }
 
 export interface IDataRepo {
@@ -21,9 +32,3 @@ export interface IDataRepo {
   incomplete_results: true;
   items: IItems[];
 }
-
-// export interface IResponceData {
-//   status: number;
-//   message: string;
-//   data: IDataRepo;
-// }

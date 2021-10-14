@@ -1,6 +1,8 @@
 export const routes = {
   static: {
-    mainPage: '/'
+    mainPage: "/",
   },
-  dynamic: {}
+  dynamic: {
+    CardDetails: "/card-details/:id/:name",
+  },
 };
