@@ -1,8 +1,4 @@
-import {
-  IContributors,
-  IItems,
-  IOwner,
-} from "../core/components/types/ListComponent";
+import { IItems, IOwner } from "../core/components/types/ListComponent";
 
 export const filterDataResponse = (items: IItems[]): IItems[] => {
   const newData: IItems[] = [];
@@ -26,9 +22,9 @@ export const filterDataResponse = (items: IItems[]): IItems[] => {
   return newData;
 };
 
-export const filterDataContributors = (items: IContributors): IOwner[] => {
+export const filterDataContributors = (items: IOwner[]): IOwner[] => {
   const newData: IOwner[] = [];
-  items.contributors.map((item): void => {
+  items.map((item): void => {
     newData.push({
       login: item.login,
       avatar_url: item.avatar_url,

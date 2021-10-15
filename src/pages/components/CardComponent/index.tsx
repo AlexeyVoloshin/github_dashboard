@@ -3,24 +3,9 @@ import { Card, Avatar } from "antd";
 import { ICardDetails } from "../../../core/components/types/ListComponent";
 import { IconText } from "../IconText";
 import { StarOutlined } from "@ant-design/icons";
-
-interface IListItem {
-  [ket: string]: number;
-}
-
-interface IPropsList {
-  data: IListItem;
-}
-
-const RenderList: React.FC<IPropsList> = (props): React.ReactElement => {
-  return (
-    <ul>
-      {Object.keys(props.data).map((item, index) => (
-        <li key={index}>{item}</li>
-      ))}
-    </ul>
-  );
-};
+import { Preloader } from "../../../core/components/Preloader";
+import { Li, Root, Ul, WrapperList } from "./styled";
+import { RenderList } from "../RenderList";
 
 export const CardComponent: React.FC<ICardDetails> = (
   props
@@ -28,7 +13,7 @@ export const CardComponent: React.FC<ICardDetails> = (
   const { Meta } = Card;
   const { details } = props;
   return (
-    <div>
+    <Root>
       <Card
         actions={[
           <span>{details!.name}</span>,
@@ -37,7 +22,7 @@ export const CardComponent: React.FC<ICardDetails> = (
             text={details!.stargazers_count}
             key="list-vertical-star-o"
           />,
-          <span>data last commit: {details!.updated_at}</span>,
+          <span>Date last commit: {details!.updated_at}</span>,
         ]}
       >
         <Meta
@@ -46,13 +31,26 @@ export const CardComponent: React.FC<ICardDetails> = (
           description={details!.description}
         />
         <p>List of used languages: </p>
-        <ul>
-          <li>html</li>
-          <li>js</li>
-          <li>TypeScript</li>
-        </ul>
-        {/* <RenderList data={} /> */}
+        <Ul>
+          {props.langIsLoading ? (
+            <Preloader size="small" />
+          ) : (
+            Object.keys(props.languages).map((item, index) => (
+              <Li className="list" key={index}>
+                {item}
+              </Li>
+            ))
+          )}
+        </Ul>
+        <p>The most active participants: </p>
+        <WrapperList>
+          {props.contribIsLoading ? (
+            <Preloader size="small" />
+          ) : (
+            <RenderList data={props.contributors} />
+          )}
+        </WrapperList>
       </Card>
-    </div>
+    </Root>
   );
 };

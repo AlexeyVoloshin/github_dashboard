@@ -19,11 +19,6 @@ export const ListComponent: React.FC<IPropsList> = (
         pageSize: 10,
       }}
       dataSource={props.dataRepo}
-      footer={
-        <div>
-          <b>Footer</b>
-        </div>
-      }
       renderItem={(item, index) => (
         <List.Item
           key={index}

@@ -16,7 +16,7 @@ export const sliceRepo = createSlice({
     addPopularRepo: (state: RepoState, action: PayloadAction<IItems[]>) => {
       state.repo = action.payload;
     },
-    repoLoading: (state: RepoState, action) => {
+    repoLoading: (state: RepoState, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
     repoError: (state: RepoState, action) => {

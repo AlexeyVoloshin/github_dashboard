@@ -6,6 +6,8 @@ import { ADD_SEARCH_FILTER, GET_POPULAR_REPO } from "./types";
 import { ListComponent } from "../components/ListComponent";
 import { RootState } from "../../store";
 import { readFilterSearch, saveFilterSearch } from "../../utils/localStore";
+import { Preloader } from "../../core/components/Preloader";
+import { MainContainer } from "./styled";
 
 const { Search } = Input;
 
@@ -26,20 +28,14 @@ export const MainPage: React.FC = (): React.ReactElement => {
   }, 500);
 
   const getPopularRepo = React.useCallback(() => {
-    try {
+    if (repo.length <= 0) {
       dispatch({ type: GET_POPULAR_REPO });
-    } catch (e) {
-      console.error(e);
     }
-  }, [dispatch]);
+  }, [dispatch, repo.length]);
 
   const searchRepo = React.useCallback(
     (search: string) => {
-      try {
-        dispatch({ type: ADD_SEARCH_FILTER, search });
-      } catch (e) {
-        console.error(e);
-      }
+      dispatch({ type: ADD_SEARCH_FILTER, payload: search });
     },
     [dispatch]
   );
@@ -60,7 +56,7 @@ export const MainPage: React.FC = (): React.ReactElement => {
   };
 
   return (
-    <>
+    <MainContainer>
       <Search
         placeholder="input search loading default"
         loading={searchIsLoading}
@@ -70,8 +66,8 @@ export const MainPage: React.FC = (): React.ReactElement => {
       {repo.length > 0 && !isLoading ? (
         <ListComponent dataRepo={repo} />
       ) : (
-        "Loading...."
+        <Preloader size="large" />
       )}
-    </>
+    </MainContainer>
   );
 };

@@ -14,11 +14,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { ApiGetResponse } from "../../api/types";
 import { filterDataResponse } from "../../utils/filterData";
 import { addSearchFilter, searchError, searchLoading } from "./sliceSearch";
-
-interface IPropsSaga {
-  search: string;
-  type: string;
-}
+import { IPropsSaga } from "../../core/types";
 
 export function* fetchSearch(
   params: IPropsSaga
@@ -31,11 +27,11 @@ export function* fetchSearch(
     yield put(searchLoading(true));
 
     const result = yield call(getRepositories, {
-      q: params.search,
+      q: params.payload,
       sort: "stars",
     });
     if ((result as ApiGetResponse<IDataRepo>).data.items) {
-      yield put(addSearchFilter(params.search));
+      yield put(addSearchFilter(params.payload));
       yield put(
         addPopularRepo(
           filterDataResponse((result as ApiGetResponse<IDataRepo>).data.items)
@@ -51,6 +47,8 @@ export function* fetchSearch(
 export function* fetchRepo(): Generator<
   | CallEffect<AxiosResponse<ApiGetResponse<IDataRepo>>>
   | PutEffect<PayloadAction<IItems[]>>
+  | PutEffect<PayloadAction<boolean>>
+  | PutEffect<PayloadAction<boolean>>
 > {
   try {
     yield put(repoLoading(true));

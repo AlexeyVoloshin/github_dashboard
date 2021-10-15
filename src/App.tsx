@@ -4,6 +4,7 @@ import { MainPage } from "./pages/MainPage";
 import { routes } from "./core/routes";
 import "./App.css";
 import { CardDetails } from "./pages/CardDetails";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 const App: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path={routes.static.mainPage} component={MainPage} />
           <Route path={routes.dynamic.CardDetails} component={CardDetails} />
+          <Route path={"*"} component={NotFoundPage} />
         </Switch>
       </Router>
     </>

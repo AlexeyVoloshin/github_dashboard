@@ -4,6 +4,10 @@ export interface IPropsList {
 
 export interface ICardDetails {
   details: IItems | undefined;
+  contributors: IOwner[];
+  languages: ILanguages;
+  contribIsLoading: boolean;
+  langIsLoading: boolean;
 }
 
 export interface IContributors {
@@ -31,4 +35,8 @@ export interface IDataRepo {
   total_count: number;
   incomplete_results: true;
   items: IItems[];
+}
+
+export interface ILanguages {
+  [key: string]: number;
 }
